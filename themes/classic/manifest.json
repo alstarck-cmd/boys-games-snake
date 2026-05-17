@@ -1,0 +1,19 @@
+{
+  "name": "classic",
+  "sprites": {
+    "snake-head": "snake-head.png",
+    "snake-body": "snake-body.png",
+    "p2-head": "p2-head.png",
+    "p2-body": "p2-body.png",
+    "food": "food.png"
+  },
+  "sounds": {
+    "eat": "sounds/eat.mp3",
+    "crash": "sounds/crash.mp3"
+  },
+  "colors": {
+    "background": "#0a0a0a",
+    "grid": "#141414",
+    "food": "#ef4444"
+  }
+}

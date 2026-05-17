@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Snake</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="theme-color" content="#0a0a0a" />
+    <link rel="icon" href="/public/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/public/apple-touch-icon.png" />
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <div id="title-screen" class="screen">
+        <h1>SNAKE</h1>
+        <button data-mode="solo" class="big-button">1 Player</button>
+        <button data-mode="versus" class="big-button">2 Players</button>
+        <p class="hint">Swipe to turn — or use the buttons</p>
+      </div>
+
+      <div id="game-screen" class="screen hidden">
+        <header id="hud">
+          <span id="score-p1">0</span>
+          <span id="score-p2" class="hidden">0</span>
+        </header>
+        <canvas id="board"></canvas>
+        <div id="dpad-p1" class="dpad">
+          <button data-dir="up" aria-label="Up">▲</button>
+          <button data-dir="left" aria-label="Left">◀</button>
+          <button data-dir="right" aria-label="Right">▶</button>
+          <button data-dir="down" aria-label="Down">▼</button>
+        </div>
+        <div id="dpad-p2" class="dpad hidden">
+          <button data-dir="up" aria-label="Up">▲</button>
+          <button data-dir="left" aria-label="Left">◀</button>
+          <button data-dir="right" aria-label="Right">▶</button>
+          <button data-dir="down" aria-label="Down">▼</button>
+        </div>
+      </div>
+
+      <div id="gameover-screen" class="screen hidden">
+        <h2 id="gameover-title">Game Over</h2>
+        <p id="gameover-detail"></p>
+        <button id="play-again" class="big-button">Play Again</button>
+        <button id="back-to-title" class="big-button">Title Screen</button>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
