@@ -88,6 +88,7 @@ h2 {
   justify-content: flex-start;
   padding-top: 10px;
   gap: 8px;
+  touch-action: none;
 }
 
 #hud {

@@ -45,7 +45,7 @@ function startGame(selectedMode) {
 
   if (!inputAttached) {
     input.attach({
-      canvas,
+      surface: screens.game,
       dpadP1,
       dpadP2,
       versus: mode === "versus",

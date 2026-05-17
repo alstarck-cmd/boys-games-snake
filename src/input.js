@@ -6,19 +6,27 @@
 
 const SWIPE_DEADZONE = 20; // pixels before a touch counts as a swipe
 
-export function attach({ canvas, dpadP1, dpadP2, versus, onTurn }) {
+export function attach({ surface, dpadP1, dpadP2, versus, onTurn }) {
   // ---------- Touch / swipe ----------
-  const active = new Map(); // touch identifier -> { startX, startY, player }
+  // Swipes register anywhere on the surface (the whole game screen), not just
+  // the canvas, so the boys can swipe from anywhere on the iPad.
+  const active = new Map(); // touch identifier -> { startX, startY, player, fired }
 
   function playerForTouch(clientX) {
     if (!versus) return 0;
-    const rect = canvas.getBoundingClientRect();
+    const rect = surface.getBoundingClientRect();
     return clientX < rect.left + rect.width / 2 ? 0 : 1;
   }
 
-  canvas.addEventListener(
+  // Skip touches that start on a button (d-pad). Those have their own handlers.
+  function isOnButton(target) {
+    return target && target.closest && target.closest("button");
+  }
+
+  surface.addEventListener(
     "touchstart",
     (e) => {
+      if (isOnButton(e.target)) return;
       e.preventDefault();
       for (const t of e.changedTouches) {
         active.set(t.identifier, {
@@ -32,9 +40,10 @@ export function attach({ canvas, dpadP1, dpadP2, versus, onTurn }) {
     { passive: false },
   );
 
-  canvas.addEventListener(
+  surface.addEventListener(
     "touchmove",
     (e) => {
+      if (isOnButton(e.target)) return;
       e.preventDefault();
       for (const t of e.changedTouches) {
         const a = active.get(t.identifier);
@@ -51,19 +60,20 @@ export function attach({ canvas, dpadP1, dpadP2, versus, onTurn }) {
     { passive: false },
   );
 
-  canvas.addEventListener("touchend", (e) => {
+  surface.addEventListener("touchend", (e) => {
     for (const t of e.changedTouches) active.delete(t.identifier);
   });
-  canvas.addEventListener("touchcancel", (e) => {
+  surface.addEventListener("touchcancel", (e) => {
     for (const t of e.changedTouches) active.delete(t.identifier);
   });
 
   // Mouse for desktop testing.
   let mouseStart = null;
-  canvas.addEventListener("mousedown", (e) => {
+  surface.addEventListener("mousedown", (e) => {
+    if (isOnButton(e.target)) return;
     mouseStart = { x: e.clientX, y: e.clientY, player: playerForTouch(e.clientX) };
   });
-  canvas.addEventListener("mouseup", (e) => {
+  surface.addEventListener("mouseup", (e) => {
     if (!mouseStart) return;
     const dir = swipeDirection(e.clientX - mouseStart.x, e.clientY - mouseStart.y);
     if (dir) onTurn(mouseStart.player, dir);
