@@ -70,6 +70,26 @@ export function draw(state) {
       drawCell(seg.x, seg.y, cell, name, fallback, snake.alive ? 1 : 0.4);
     });
   });
+
+  if (state.countdown > 0) drawCountdown(state.countdown);
+}
+
+function drawCountdown(secondsLeft) {
+  const w = canvas.width / (window.devicePixelRatio || 1);
+  const h = canvas.height / (window.devicePixelRatio || 1);
+  ctx.fillStyle = "rgba(0, 0, 0, 0.45)";
+  ctx.fillRect(0, 0, w, h);
+
+  // Last half-second of the countdown is reserved for "GO!".
+  // Before that, show ceiling of remaining "number seconds" so we get 3, 2, 1.
+  const numberPhase = secondsLeft - 0.5;
+  const label = numberPhase > 0 ? String(Math.ceil(numberPhase)) : "GO!";
+  const size = Math.min(w, h) * (label === "GO!" ? 0.28 : 0.42);
+  ctx.fillStyle = "#4ade80";
+  ctx.font = `700 ${size}px -apple-system, "SF Pro Display", system-ui, sans-serif`;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(label, w / 2, h / 2);
 }
 
 function drawCell(gx, gy, cell, spriteName, fallbackColor, alpha = 1) {

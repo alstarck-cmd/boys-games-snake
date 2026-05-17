@@ -16,6 +16,7 @@ import {
   GROW_PER_FOOD,
   FOOD_PER_BOARD,
   FOOD_PER_BOARD_VS,
+  COUNTDOWN_SECONDS,
 } from "./config.js";
 
 export const DIRS = {
@@ -65,7 +66,8 @@ export function newGame(mode = "solo") {
     foods: [],
     speed: START_SPEED,
     over: false,
-    winner: null, // index of the surviving snake in versus, or null
+    winner: null,         // index of the surviving snake in versus, or null
+    countdown: COUNTDOWN_SECONDS, // main.js counts this down before ticking
   };
   const foodCount = versus ? FOOD_PER_BOARD_VS : FOOD_PER_BOARD;
   for (let i = 0; i < foodCount; i++) spawnFood(state);
@@ -117,26 +119,36 @@ export function tick(state) {
     }
   }
 
-  // Check crashes (walls, self, other snake).
-  for (const snake of state.snakes) {
-    if (!snake.alive) continue;
+  // Check crashes. We figure out who dies FIRST (looking at every snake's
+  // current state), THEN mark them dead. That way two snakes crashing into
+  // each other on the same tick always both die together — never one before
+  // the other based on array order.
+  const willDie = new Set();
+  state.snakes.forEach((snake, i) => {
+    if (!snake.alive) return;
     const head = snake.body[0];
+    // Wall.
     if (head.x < 0 || head.y < 0 || head.x >= GRID_COLS || head.y >= GRID_ROWS) {
-      snake.alive = false;
-      continue;
+      willDie.add(i);
+      return;
     }
+    // Own body (skip head itself).
     if (snake.body.slice(1).some((s) => s.x === head.x && s.y === head.y)) {
-      snake.alive = false;
-      continue;
+      willDie.add(i);
+      return;
     }
-    for (const other of state.snakes) {
-      if (other === snake) continue;
+    // Other snakes — any segment, including their head if they moved into the same cell.
+    for (let j = 0; j < state.snakes.length; j++) {
+      if (j === i) continue;
+      const other = state.snakes[j];
+      if (!other.alive) continue;
       if (other.body.some((s) => s.x === head.x && s.y === head.y)) {
-        snake.alive = false;
-        break;
+        willDie.add(i);
+        return;
       }
     }
-  }
+  });
+  for (const i of willDie) state.snakes[i].alive = false;
 
   // Decide if the game is over.
   const alive = state.snakes.filter((s) => s.alive);

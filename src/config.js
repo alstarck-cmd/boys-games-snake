@@ -17,6 +17,8 @@ export const GROW_PER_FOOD = 2;     // how many segments you gain per food
 export const FOOD_PER_BOARD = 1;    // food items on the board at once (solo mode)
 export const FOOD_PER_BOARD_VS = 2; // food items in versus mode
 
+export const COUNTDOWN_SECONDS = 3.5; // 3 seconds of "3,2,1" then half a second of "GO!"
+
 // Colors used when sprites are missing or fall back to rectangles.
 export const COLORS = {
   background: "#0a0a0a",

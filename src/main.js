@@ -73,6 +73,17 @@ function startLoop() {
   function frame(now) {
     const dt = (now - last) / 1000;
     last = now;
+
+    if (state.countdown > 0) {
+      // Pause the game logic during the 3-2-1 intro; just draw the board
+      // and overlay so players can see where they're starting.
+      state.countdown = Math.max(0, state.countdown - dt);
+      acc = 0;
+      render.draw(state);
+      loop = requestAnimationFrame(frame);
+      return;
+    }
+
     acc += dt;
     const step = 1 / state.speed;
     while (acc >= step && !state.over) {
