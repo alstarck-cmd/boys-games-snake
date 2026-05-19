@@ -3,15 +3,15 @@
 // This is the FIRST FILE to play with. Save and reload the page.
 // =============================================================
 
-export const GRID_COLS = 48;        // how many squares wide the board is
-export const GRID_ROWS = 36;        // how many squares tall the board is
+export const GRID_COLS = 24;        // how many squares wide the board is
+export const GRID_ROWS = 24;        // how many squares tall the board is
 export const CELL_SIZE = 24;        // pixels per square
 
 export const START_SPEED = 7;       // moves per second at the start
 export const SPEED_PER_FOOD = 0.15; // game gets this much faster every time you eat
 export const MAX_SPEED = 18;        // top speed cap so it doesn't get impossible
 
-export const START_LENGTH = 20;      // how long the snake is when you start
+export const START_LENGTH = 4;      // how long the snake is when you start
 export const GROW_PER_FOOD = 2;     // how many segments you gain per food
 
 export const FOOD_PER_BOARD = 1;    // food items on the board at once (solo mode)
